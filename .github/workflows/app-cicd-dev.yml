@@ -1,4 +1,4 @@
-name: Application CI/CD 
+name: Application CI/CD (Dev)
 
 # Controls when the workflow will run
 on:
