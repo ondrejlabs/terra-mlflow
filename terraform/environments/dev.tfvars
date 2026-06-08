@@ -19,3 +19,16 @@ ecr_repositories = [
     tags = {}
   }
 ]
+
+ecs_services = [
+  {
+    key            = "mlops-ondrej-labs"
+    ecr_repository = "mlops-repo-ondrej-labs"
+    image_tag      = "latest"
+    container_port = 80
+    cpu            = 256
+    memory         = 512
+    desired_count  = 1
+    tags           = {}
+  }
+]
