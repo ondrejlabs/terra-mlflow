@@ -17,6 +17,8 @@ jobs:
     defaults:
       run:
         working-directory: terraform
+    permissions:
+      issues: write
 
     steps:
       - name: Checkout repository
@@ -43,7 +45,21 @@ jobs:
         run: terraform validate -no-color
 
       - name: Terraform Plan
-        run: terraform plan -no-color --var-file='environments/dev.tfvars'
+        run: terraform plan -no-color --var-file='environments/dev.tfvars' -out=plan.tfout
+
+      - name: Approval
+        uses: trstringer/manual-approval@v1
+        timeout-minutes: 60
+        with:
+          secret: ${{ github.token }}
+          approvers: ondrejlabs
+          issue-title: "Deploy Terraform Plan to dev"
+          issue-body: "Please review the Terraform Plan"
+          exclude-workflow-initiator-as-approver: false
+
+      # - name: Terraform Apply
+      #   run: terraform apply --var-file='environments/dev.tfvars' -auto-approve
 
       - name: Terraform Apply
-        run: terraform apply --var-file='environments/dev.tfvars' -auto-approve
+        run: terraform apply -auto-approve plan.tfout
+
